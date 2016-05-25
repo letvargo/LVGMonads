@@ -1,4 +1,4 @@
-# LVGUtilities
+# LVGMonads
 
 [![CI Status](http://img.shields.io/travis/letvargo/LVGMonads.svg?style=flat)](https://travis-ci.org/letvargo/LVGMonads)
 [![Version](https://img.shields.io/cocoapods/v/LVGMonads.svg?style=flat)](http://cocoapods.org/pods/LVGMonads)
