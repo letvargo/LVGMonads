@@ -83,6 +83,20 @@ public func io<T>(value: T) -> IO<T> {
 }
 
 /**
+ Flatten a nested IO object one level.
+ 
+ This function is the equivalent of `join` in the Monad typeclass. It 
+ takes an object of type `IO<IO<T>> and returns the internal IO object.
+ 
+ - parameter value: The IO object that is to be flattened.
+ - returns: The nested `IO<T>` object.
+ */
+
+public func join<T>(io: IO<IO<T>>) -> IO<T> {
+    return IO { <=(<=io) }
+}
+
+/**
  Chain two IO actions together, where the output of the first is 
  the input of the second.
 
