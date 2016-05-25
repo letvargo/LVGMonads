@@ -6,7 +6,12 @@
 //
 //
 
+// MARK: Operator Definitions
+
+prefix operator <= { }
+
 // MARK: The IO struct
+
 /**
  A type for representing input/output actions.
  */
@@ -20,15 +25,22 @@ public struct IO<T> {
     }
 }
 
+/// A private prefix function that represents the execution of an IO action.
+///
+/// - parameter io: The IO action to execute.
+/// - returns: An object of type `T`.
+private prefix func <= <T> (io: IO<T>) -> T {
+    return io.action()
+}
+
 // MARK: The Main struct
+
 /**
  A dummy type used to define the top level of execution for an IO type.
  
  An `IO<Main>` object is executed using the `<=` prefix operator.
  */
 public struct Main { }
-
-prefix operator <= { }
 
 /**
  Execute the action stored in an `IO<Main>` object.
