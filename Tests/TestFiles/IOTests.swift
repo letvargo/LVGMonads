@@ -33,4 +33,8 @@ class IOTests: XCTestCase {
         
         XCTAssertEqual(op.action(), "10", "Did not convert correctly.")
     }
+    
+    testFunctorLaws() {
+    
+    }
 }
