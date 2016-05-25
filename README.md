@@ -11,7 +11,7 @@ Haskell-style Monads implemented in Swift.
 
 As a way to learn about Monads I've started implementing a few of them in Swift. The first is the 
 IO Monad which is nearly complete. I hope to implement others over time. State, Writer and a version 
-of Optional that works like `Maybe` are all in the works.
+of Maybe (essentially `Optional`) are all in the back of my mind.
 
 Each of the Monads will also define all of the Functor and Applicative typeclass operations.
 
@@ -69,17 +69,34 @@ Haskell       LVGMonads     Definition
 .             .<<           (.<<) :: (b -> c) -> (a -> b) -> (a -> c)
 N/A           .>>           (.>>) :: (a -> b) -> (b -> c) -> (a -> c)
 $             <--           (<--) :: (a -> b) -> a -> b
-N/A           -->           (->>) :: a -> (a -> b) -> b
+N/A           -->           (-->) :: a -> (a -> b) -> b
 ```
 
 `.<<` and `.>>` are right-to-left function composition and left-to-right function composition,
 respectively. `<--` and `-->` are right-to-left function application and left-to-right
 function application, respectively.
 
+Accuse me of OCD if you want, but I made all of these 3 characters long because Xcode indents
+internal blocks of code 4 spaces. That means if you start a new line with one of these
+operators followed by a space followed by the expression, you're code will all naturally
+line up. 
+
+```
+    aitch
+    .<< gee
+    .<< eff
+    <-- ex    // evaluates to aitch(gee(eff(ex)))
+```
+
+Some of these operators could have been shorter, but then the spacing would be off and the
+world would end. There is a madness to my method.
+
 Additional operators may be defined for each specific Monad, but the ones above are used in
 all of them.
 
 ## The IO Monad
+
+### Introduction
 
 The IO Monad represents an action that produces a side effect. It is a way of representing 
 user input, UI updates, reading and writing to files, etc. It either receives data from the 
@@ -97,6 +114,82 @@ starts the program and every other function in the program that returns an IO ty
 called by `main`, and `main` itself is a function that always returns `IO ()`. In Haskell these
 rules are enforced by the language which has no mechanism for calling any IO function other
 than `main` (please correct me if I am wrong about this - I have a lot to learn about Haskell).
+
+There is no way to enforce such a rule in Swift. I came up with a hack that makes you go out of
+your way to execute an IO action - I made it so that there is only one type of IO action that
+can be executed: `IO<Main>`. `Main` itself is just a dummy type:
+
+```
+public struct Main { public init() { } }
+```
+
+So the Swift equivalent of Haskell's `main:: IO ()` is `let main: IO<Main>`. Of course unlike
+in Haskell you can put an `IO<Main>` action anywhere in your Swift code and execute it if you 
+want to. In a way, each little `IO<Main>` action becomes a functionally pure program unto itself,
+which is kind of cool. After all, people are unlikely to start rewriting entire iPhone
+applications as a single `IO<Main>` action. But they may find places here and there where the
+Monadic structure of the IO type makes sense. The compositional nature of these Monadic structures
+make it possible to start very small and grow, naturally, into something very big.
+
+### Creating an IO action
+
+The IO type is quite simple. This is all of it:
+
+```
+public struct IO<A> {
+    
+    /// The IO action to perform.
+    let action: () -> A
+    
+    /// Initialize an IO object with a closure that contains an IO action.
+    public init(_ action: () -> A) {
+        self.action = action
+    }
+}
+```
+
+You can think of IO actions (oversimplification alert) as falling into one of two categories - 
+read actions and write actions. An example of a read action might be getting a line of 
+input from standard input. In Swift you use the `readLine()` function to do that, which returns 
+a `String?`. We can turn it into an IO action like this (and we'll keep things simple for now 
+by forcing it to return a non-optional `String`):
+
+```
+let ioReadLine: IO<String> = IO { readLine()! }
+```
+
+Now let's create a write operation. We'll use `print` as our example, which writes any
+value you give it to standard output.
+
+```
+let ioPrint: String -> IO<()> = { s in IO { print(s) } }
+```
+
+Standing alone there is no way to execute either of these functions. Only IO actions of type `IO<Main>` can be
+executed, remember? So how do we call them? Like this:
+
+```
+// This defines our main function:
+let main: IO<Main> = ioReadLine =>> ioPrint =>> exit
+```
+
+What's happening here? The short version is that `ioReadline` grabs a `String` from
+standard input. That value is fed into `ioPrint`. `ioPrint` returns an `IO<()>` action which, 
+when executed, returns a `()`. That `()` is fed into `exit` which is a special function
+available everywhere of type `() -> IO<Main>`. So when `exit` gets the `()` input from
+`ioPrint`, it returns `IO<Main>`.
+
+But none of that happens right away. All we've done so far is compose a couple of IO
+actions into a single IO action and called it `main`. Nothing happens until we execute
+`main`, which we can do using the handy `<=` prefix operator:
+
+```
+// Execute the main function:
+<=main
+```
+
+Only when `main` is executed do the other actions get executed, in the order in which
+they have been combined.
 
 ## Installation
 
