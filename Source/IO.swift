@@ -75,7 +75,7 @@ public func exit() -> IO<Main> { return io(Main()) }
  */
 
 public func fmap<A, B>(f: A -> B) -> IO<A> -> IO<B> {
-    return { ioa in IO { f(<=ioa) } }
+    return { ioa in IO { (f .<< ioa.action)() } }
 }
 
 /**
@@ -166,7 +166,7 @@ public func join<T>(io: IO<IO<T>>) -> IO<T> {
  */
 
 public func bind<A, B>(ioa: IO<A>) -> (A -> IO<B>) -> IO<B> {
-    return { f in IO { <=(f(<=ioa)) } }
+    return { f in IO { <=(f .<< ioa.action)() } }
 }
 
 /**
