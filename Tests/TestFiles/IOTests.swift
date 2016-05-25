@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import LVGMonads
 
 class IOTests: XCTestCase {
     
