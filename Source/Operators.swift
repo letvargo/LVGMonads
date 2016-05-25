@@ -15,6 +15,9 @@ infix operator ->> { associativity left precedence 150 }
 // The fmap operator for Functors.
 infix operator <^> { associativity left precedence 150 }
 
+// The apply operator for Applicative Functors.
+infix operator <*> { associativity left precedence 150 }
+
 // Left-to-right function composition.
 infix operator .>> { associativity left precedence 200 }
 

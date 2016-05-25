@@ -6,10 +6,6 @@
 //
 //
 
-// MARK: Operator Definitions
-
-prefix operator <= { }
-
 // MARK: The IO struct
 
 /**
@@ -26,6 +22,8 @@ public struct IO<T> {
 }
 
 // MARK: The <= Operator Functions
+
+prefix operator <= { }
 
 /**
  Execute the action stored in an `IO<Main>` object.
@@ -97,6 +95,35 @@ public func <^> <A, B> (f: A -> B, ioa: IO<A>) -> IO<B> {
     return fmap(f)(ioa)
 }
 
+// MARK: The IO Applicative functions
+
+/**
+ Apply a function wrapped an IO object.
+ 
+ - parameter iof: An IO object of type `IO<A -> B>`.
+ - returns: A function that takes an `IO<A>` object and returns an 
+ `IO<B>` object.
+ */
+
+public func apply<A, B>(iof: IO<A -> B>) -> IO<A> -> IO<B> {
+    return { ioa in IO { <=fmap(<=iof)(ioa) } }
+}
+
+/**
+ Apply a function wrapped an IO object to an IO object.
+ 
+ - parameters: 
+   - iof: An IO object of type `IO<A -> B>`.
+   - ioa: An object of type `IO<A>`. The nested `iof` function will be applied
+   to the output of this IO action.
+ - returns: A function that takes an `IO<A>` object and returns an
+ `IO<B>` object.
+ */
+
+public func <*> <A, B>(iof: IO<A -> B>, ioa: IO<A>) -> IO<B> {
+    return apply(iof)(ioa)
+}
+
 // MARK: The IO Monad functions
 
 /** 
@@ -126,7 +153,7 @@ public func io<T>(value: T) -> IO<T> {
  */
 
 public func join<T>(io: IO<IO<T>>) -> IO<T> {
-    return IO { <=(<=io) }
+    return <=io
 }
 
 /**
@@ -139,9 +166,7 @@ public func join<T>(io: IO<IO<T>>) -> IO<T> {
  */
 
 public func bind<A, B>(ioa: IO<A>) -> (A -> IO<B>) -> IO<B> {
-    return { f in
-        IO { <=(f(<=ioa)) }
-    }
+    return { f in IO { <=(f(<=ioa)) } }
 }
 
 /**
