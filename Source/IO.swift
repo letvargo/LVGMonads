@@ -83,7 +83,8 @@ public func io<T>(value: T) -> IO<T> {
 }
 
 /**
- Chain two IO actions together, executing them in succession.
+ Chain two IO actions together, where the output of the first is 
+ the input of the second.
 
  This function is the equivalent of `bind` in the Monad typeclass. The output
  of the left-hand IO action is fed into the function on the right-hand side and
@@ -95,9 +96,30 @@ public func io<T>(value: T) -> IO<T> {
  - parameters:
    - ioa: An `IO<A>` object.
    - f: A function of type `A -> IO<B>`.
- - returns: A new IO action of type `IO<B>`.
+ - returns: A new IO action of type `IO<B>` that executes the two actions
+ in succession.
  */
 
 public func =>> <A, B> (ioa: IO<A>, f: A -> IO<B>) -> IO<B> {
     return IO { <=(f(<=ioa)) }
+}
+
+/**
+ Chain two IO actions together, ignoring the output of the first.
+ 
+ This function is the equivalent of Haskell's `>>` operator. The output of
+ the left-hand IO action is ignored.
+ 
+ The standard Haskell `>>` operator is not used because `>>` is already 
+ defined by the Swift standard library.
+ 
+ - parameters:
+   - ioa: The first IO action to execute.
+   - iob: The second IO action to execute.
+ - returns: A new IO action of type `IO<B>` that executes the two actions 
+ in succession.
+ */
+
+public func ->> <A, B> (ioa: IO<A>, iob: IO<B>) -> IO<B> {
+    return ioa =>> { _ in iob }
 }
