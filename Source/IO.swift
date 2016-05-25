@@ -25,22 +25,7 @@ public struct IO<T> {
     }
 }
 
-/// A private prefix function that represents the execution of an IO action.
-///
-/// - parameter io: The IO action to execute.
-/// - returns: An object of type `T`.
-private prefix func <= <T> (io: IO<T>) -> T {
-    return io.action()
-}
-
-// MARK: The Main struct
-
-/**
- A dummy type used to define the top level of execution for an IO type.
- 
- An `IO<Main>` object is executed using the `<=` prefix operator.
- */
-public struct Main { }
+// MARK: The <= Operator Functions
 
 /**
  Execute the action stored in an `IO<Main>` object.
@@ -52,7 +37,34 @@ public prefix func <= (io: IO<Main>) -> Main {
     return io.action()
 }
 
-// MARK: IO Monad functions
+/** 
+ A private prefix function that represents the execution of an IO action.
+
+ - parameter io: The IO action to execute.
+ - returns: An object of type `T`.
+ */
+private prefix func <= <T> (io: IO<T>) -> T {
+    return io.action()
+}
+
+// MARK: The Main struct
+
+/**
+ A dummy type used to define the top level of execution for an IO type.
+ 
+ An `IO<Main>` object is executed using the `<=` prefix operator.
+ */
+public struct Main { public init() { } }
+
+/**
+ A function that returns an `IO<Main>` object.
+ 
+ This function is used to signal the end of a chain of IO actions and end
+ execution of the application's main IO function.
+ */
+public func exit() -> IO<Main> { io(Main()) }
+
+// MARK: The IO Monad functions
 
 /** 
  Lift a value into an `IO` object.
