@@ -158,14 +158,26 @@ by forcing it to return a non-optional `String`):
 let ioReadLine: IO<String> = IO { readLine()! }
 ```
 
-Now let's create a write operation. We'll use `print` as our example, which writes any
-value you give it to standard output.
+Now let's create a write operation. We'll `print` something to standard output:
+
+```
+let hello: IO<()> = { print("Hello world!") }
+```
+
+`hello` is fine, but it only ever prints one thing. Let's generalize it into a function that
+takes a `String` as input and returns an IO action that will print that `String`:
 
 ```
 let ioPrint: String -> IO<()> = { s in IO { print(s) } }
 ```
 
-Standing alone there is no way to execute either of these functions. Only IO actions of type `IO<Main>` can be
+Now we can make `IO<()>` actions by feeding `String`s to `ioPrint`:
+
+```
+let startTheRumpus = ioPrint("Let the wild rumpus start!")
+```
+
+Standing alone there is no way to execute any of these actions. Only IO actions of type `IO<Main>` can be
 executed, remember? So how do we call them? Like this:
 
 ```
