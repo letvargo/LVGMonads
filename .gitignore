@@ -1,0 +1,6 @@
+.DS_Store
+xcuserdata/
+build/
+Tests.xcworkspace/
+Pods/
+Podfile.lock

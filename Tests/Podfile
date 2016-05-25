@@ -1,0 +1,14 @@
+use_frameworks!
+
+install! 'cocoapods',
+    :deterministic_uuids => false
+
+target 'Tests-iOS' do
+    platform :ios, '8.0'
+    pod 'LVGMonads', :path => '../'
+end
+
+target 'Tests-OSX' do
+    platform :osx, '10.10'
+    pod 'LVGMonads', :path => '../'
+end
