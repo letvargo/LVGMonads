@@ -17,7 +17,7 @@ prefix operator <= { }
  */
 public struct IO<T> {
     
-    private let action: () -> T
+    let action: () -> T
     
     /// Initialize an IO object with a closure that performs a side-effect.
     public init(_ action: () -> T) {
@@ -43,7 +43,7 @@ public prefix func <= (io: IO<Main>) -> Main {
  - parameter io: The IO action to execute.
  - returns: An object of type `T`.
  */
-private prefix func <= <T> (io: IO<T>) -> T {
+prefix func <= <T> (io: IO<T>) -> T {
     return io.action()
 }
 
