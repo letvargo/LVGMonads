@@ -6,8 +6,9 @@
 //
 //
 
+// MARK: The IO struct
 /**
- A type for representing input/output operations.
+ A type for representing input/output actions.
  */
 public struct IO<T> {
     
@@ -18,6 +19,28 @@ public struct IO<T> {
         self.action = action
     }
 }
+
+// MARK: The Main struct
+/**
+ A dummy type used to define the top level of execution for an IO type.
+ 
+ An `IO<Main>` object is executed using the `<=` prefix operator.
+ */
+public struct Main { }
+
+prefix operator <= { }
+
+/**
+ Execute the action stored in an `IO<Main>` object.
+ 
+ - parameter io: The `IO<Main>` object to execute.
+ - returns: A dummy `Main` object.
+ */
+public prefix func <= (io: IO<Main>) -> Main {
+    return io.action()
+}
+
+// MARK: IO Monad functions
 
 /** 
  Lift a value into an `IO` object.
