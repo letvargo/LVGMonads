@@ -34,7 +34,25 @@ class IOTests: XCTestCase {
         XCTAssertEqual(op.action(), "10", "Did not convert correctly.")
     }
     
-    testFunctorLaws() {
+    func testFunctorIdentityLaw() {
     
+        let ioTen = io(10)
+        
+        // The equivalent of fmap id
+        let ioID: IO<Int> -> IO<Int> = { id <^> $0 }
+        
+        XCTAssertEqual(ioID(ioTen).action(), id(ioTen).action(), "fmap failed the functor identity law.")
+    }
+    
+    func testFunctorCompositionLaw() {
+    
+        let ioTen = io(10)
+        let f: Int -> Bool = { $0 == 10 }
+        let g: Bool -> String = { $0 ? "true" : "false" }
+        
+        XCTAssertEqual(
+            <=fmap(g .<< f)(ioTen),
+            <=(fmap(g) .<< fmap(f))(ioTen)
+        )
     }
 }

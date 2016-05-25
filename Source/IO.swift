@@ -72,6 +72,20 @@ public func exit() -> IO<Main> { return io(Main()) }
  This function is the equivalent of Haskell's `<$>` operator. `<$>` is
  not used because `$` is a forbidden charactor when defining custom operators.
  
+ - parameter f: The function to be applied.
+ - returns: A function of type `IO<A>` -> `IO<B>`.
+ */
+
+public func fmap<A, B>(f: A -> B) -> IO<A> -> IO<B> {
+    return { ioa in IO { f(<=ioa) } }
+}
+
+/**
+ The fmap function for IO objects.
+ 
+ This function is the equivalent of Haskell's `<$>` operator. `<$>` is
+ not used because `$` is a forbidden charactor when defining custom operators.
+ 
  - parameters:
    - f: The function to be applied.
    - ioa: An `IO<A>` object. The function will be applied to the output of
@@ -80,7 +94,7 @@ public func exit() -> IO<Main> { return io(Main()) }
  */
 
 public func <^> <A, B> (f: A -> B, ioa: IO<A>) -> IO<B> {
-    return IO { f(<=ioa) }
+    return fmap(f)(ioa)
 }
 
 // MARK: The IO Monad functions
