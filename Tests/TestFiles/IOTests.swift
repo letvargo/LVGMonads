@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable
 import LVGMonads
 
 class IOTests: XCTestCase {
@@ -14,18 +15,22 @@ class IOTests: XCTestCase {
     let ioPrint: Any -> IO<()> = { a in IO { print(a) } }
     let intToString: Int -> String = { $0.description }
     
-    func testFmap() {
+    func testAction() {
+        let one = io(1)
+        XCTAssertEqual(one.action(), 1, "action() did not extract correct value.")
+    }
     
-        let test: String -> IO<()> = { x in
-            IO { XCTAssertEqual(x, "10", "Did not convert correctly.") }
-        }
+    func testActionOperator() {
+        let one = io(1)
+        XCTAssertEqual(<=one, 1, "action() did not extract correct value.")
+    }
+    
+    func testFmapOperator() {
         
-        let main: IO<Main> =
-            intToString
+        let op: IO<String> =
+                intToString
             <^> io(10)
-            =>> test
-            =>> exit
         
-        _ = <=main
+        XCTAssertEqual(op.action(), "10", "Did not convert correctly.")
     }
 }
