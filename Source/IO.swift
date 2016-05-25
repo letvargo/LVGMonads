@@ -11,12 +11,12 @@
 /**
  A type for representing input/output actions.
  */
-public struct IO<T> {
+public struct IO<A> {
     
-    let action: () -> T
+    let action: () -> A
     
     /// Initialize an IO object with a closure that performs a side-effect.
-    public init(_ action: () -> T) {
+    public init(_ action: () -> A) {
         self.action = action
     }
 }
@@ -41,7 +41,7 @@ public prefix func <= (io: IO<Main>) -> Main {
  - parameter io: The IO action to execute.
  - returns: An object of type `T`.
  */
-prefix func <= <T> (io: IO<T>) -> T {
+prefix func <= <A> (io: IO<A>) -> A {
     return io.action()
 }
 
@@ -75,7 +75,7 @@ public func exit() -> IO<Main> { return io(Main()) }
  */
 
 public func fmap<A, B>(f: A -> B) -> IO<A> -> IO<B> {
-    return { ioa in IO { f(<=ioa) } }
+    return { ioa in IO { (f .<< ioa.action)() } }
 }
 
 /**
@@ -166,7 +166,7 @@ public func join<T>(io: IO<IO<T>>) -> IO<T> {
  */
 
 public func bind<A, B>(ioa: IO<A>) -> (A -> IO<B>) -> IO<B> {
-    return { f in IO { <=(f(<=ioa)) } }
+    return { f in IO { <=(f .<< ioa.action)() } }
 }
 
 /**
