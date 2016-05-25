@@ -64,6 +64,25 @@ public struct Main { public init() { } }
  */
 public func exit() -> IO<Main> { return io(Main()) }
 
+// MARK: The IO Functor functions
+
+/**
+ The fmap function for IO objects.
+ 
+ This function is the equivalent of Haskell's `<$>` operator. `<$>` is
+ not used because `$` is a forbidden charactor when defining custom operators.
+ 
+ - parameters:
+   - f: The function to be applied.
+   - ioa: An `IO<A>` object. The function will be applied to the output of
+   this IO action to produce a new action of type `IO<B>`.
+ - returns: A new IO action
+ */
+
+public func <^> <A, B> (f: A -> B, ioa: IO<A>) -> IO<B> {
+    return IO { f(<=ioa) }
+}
+
 // MARK: The IO Monad functions
 
 /** 

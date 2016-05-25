@@ -11,11 +11,21 @@ import LVGMonads
 
 class IOTests: XCTestCase {
 
-    func testIOMainActionOperator() {
-        let main: IO<Main> = io(Main())
+    let ioPrint: Any -> IO<()> = { a in IO { print(a) } }
+    let intToString: Int -> String = { $0.description }
+    
+    func testFmap() {
+    
+        let test: String -> IO<()> = { x in
+            IO { XCTAssertEqual(x, "10", "Did not convert correctly.") }
+        }
         
-        let m = <=main
+        let main: IO<Main> =
+            intToString
+            <^> io(10)
+            =>> test
+            =>> exit
         
-        XCTAssertTrue(m is Main, "<= did not return a Main type.")
+        _ = <=main
     }
 }
