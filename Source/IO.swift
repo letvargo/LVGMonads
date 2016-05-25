@@ -130,6 +130,21 @@ public func join<T>(io: IO<IO<T>>) -> IO<T> {
 }
 
 /**
+ Chain two IO actions together, where the output of the first is
+ the input of the second.
+ 
+ - parameter ioa: An `IO<A>` object.
+ - returns: A new function that takes a function of type `A -> IO<B>` and
+ returns a new IO action of type `IO<B>`.
+ */
+
+public func bind<A, B>(ioa: IO<A>) -> (A -> IO<B>) -> IO<B> {
+    return { f in
+        IO { <=(f(<=ioa)) }
+    }
+}
+
+/**
  Chain two IO actions together, where the output of the first is 
  the input of the second.
 
@@ -148,7 +163,7 @@ public func join<T>(io: IO<IO<T>>) -> IO<T> {
  */
 
 public func =>> <A, B> (ioa: IO<A>, f: A -> IO<B>) -> IO<B> {
-    return IO { <=(f(<=ioa)) }
+    return bind(ioa)(f)
 }
 
 /**
