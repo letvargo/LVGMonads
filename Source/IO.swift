@@ -62,7 +62,7 @@ public struct Main { public init() { } }
  This function is used to signal the end of a chain of IO actions and end
  execution of the application's main IO function.
  */
-public func exit() -> IO<Main> { io(Main()) }
+public func exit() -> IO<Main> { return io(Main()) }
 
 // MARK: The IO Monad functions
 
@@ -80,4 +80,17 @@ public func exit() -> IO<Main> { io(Main()) }
 
 public func io<T>(value: T) -> IO<T> {
     return IO { _ in value }
+}
+
+/**
+ The `bind` function for Monads.
+ 
+ - parameters:
+   - ioa: An `IO<A>` object.
+   - f: A function of type `A -> IO<B>`.
+ - returns: A new IO action of type `IO<B>`.
+ */
+
+public func =>> <A, B> (ioa: IO<A>, f: A -> IO<B>) -> IO<B> {
+    return IO { <=(f(<=ioa)) }
 }

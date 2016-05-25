@@ -6,3 +6,4 @@
 //
 //
 
+infix operator =>> { associativity left precedence 150 }
