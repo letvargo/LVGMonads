@@ -83,7 +83,14 @@ public func io<T>(value: T) -> IO<T> {
 }
 
 /**
- The `bind` function for Monads.
+ Chain two IO actions together, executing them in succession.
+
+ This function is the equivalent of `bind` in the Monad typeclass. The output
+ of the left-hand IO action is fed into the function on the right-hand side and
+ a new IO action is returned.
+ 
+ `>>=`, the standard Haskell `bind` operator, is not used because `>>=` is
+ already defined by the Swift standard library.
  
  - parameters:
    - ioa: An `IO<A>` object.
