@@ -57,7 +57,7 @@ Haskell       LVGMonads     Name          Definition
 <$>           <^>           fmap          (<^>) :: Functor f => (a -> b) -> f a -> f b
 <*>           <*>           apply         (<*>) :: Applicative f => f (a -> b) -> f a -> f b
 >>=           =>>           bind          (=>>) :: Monad m => m a -> (a -> m b) -> m b
->>            ->>           sequence      (->>) :: Monad m => m a -> m b -> m b
+>>            ->>           N/A           (->>) :: Monad m => m a -> m b -> m b
 ```
 
 There's another set of operators that aren't specific to the type class functions, but are 
@@ -177,8 +177,59 @@ Now we can make `IO<()>` actions by feeding `String`s to `ioPrint`:
 let startTheRumpus = ioPrint("Let the wild rumpus start!")
 ```
 
+### Composing IO actions
+
+IO actions are composable. You can start small and build big. There are two operations
+for composing IO actions together, `=>>` and `->>`. 
+
+The first, `=>>`, is pronounced `bind` it is the equivalent of the `>>=` operator in 
+Haskell. Here is its definition:
+
+```
+public func =>> <A, B> (ioa: IO<A>, f: A -> IO<B>) -> IO<B>
+```
+
+It takes an `IO<A>` and a function of type `A -> IO<B>`, and returns an `IO<B>`. Let's
+use it to combine `ioReadLine` (an `IO<String>`) and `ioPrint` (a function of type
+`String -> IO<()>`):
+
+```
+let echo: IO<()> = ioReadLine =>> ioPrint
+```
+
+Now, whenever `echo` gets executed it will read a line from standard input and feed
+the `String` that it gets into `ioPrint`.
+
+Note that `echo` can also be written like this:
+
+```
+let echo: IO<()> = ioReadLine =>> { x in ioPrint(x) }
+```
+
+This second technique is useful if you need to perform more complex operations on
+`x` before printing it:
+
+```
+let echo: IO<()> = ioReadLine =>> { x in ioPrint(x.uppercaseString) }
+```
+
+The second operator for combining IO actions is `->>`. It doesn't have a name, per se, but I
+have taken to calling it `then`, so that `a ->> b` reads `a then b`. It is the same as the
+`>>` operator in Haskell. Like `=>>`, it combines two IO actions into one, but it ignores
+the output of the first IO action. 
+
+For example, `echo` is nice, but it needs a line of text to prompt the user to type 
+something in to the terminal. Let's use `ioPrint` to prompt the user for some input before 
+calling `echo`:
+
+```
+let betterEcho: IO<()> = ioPrint("Please enter some text:") ->> echo
+```
+
+### Executing IO actions
+
 Standing alone there is no way to execute any of these actions. Only IO actions of type `IO<Main>` can be
-executed, remember? So how do we call them? Like this:
+executed. So how do we call them? Like this:
 
 ```
 // This defines our main function:
