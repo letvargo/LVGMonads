@@ -64,6 +64,7 @@ class IOTests: XCTestCase {
     }
     
     func testApplicativeIdentityLaw() {
+    
         let ioTen = io(10)
         
         let main: IO<Main> =
@@ -76,5 +77,25 @@ class IOTests: XCTestCase {
             } }                 =>> exit
         
         <=main
+    }
+    
+    func testApplicativeCompositionLaw() {
+        
+        let ioTen = io(10)
+        let ioF: IO<Int -> Bool> = io { $0 == 10 }
+        let ioG: IO<Bool -> String> = io { $0 ? "true" : "false" }
+        
+        let h: (Bool -> String) -> (Int -> Bool) -> (Int -> String) = { g in return { f in g .<< f } }
+        
+        let main: IO<Main> =
+            io(h) <*> ioG <*> ioF <*> ioTen =>> { x in
+            ioG <*> (ioF <*> ioTen)         =>> { y in
+                
+                io <-- XCTAssertEqual(x, y)
+                
+            } }                             =>> exit
+        
+        <=main
+        
     }
 }
