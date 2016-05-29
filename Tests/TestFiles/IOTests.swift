@@ -98,4 +98,35 @@ class IOTests: XCTestCase {
         <=main
         
     }
+    
+    func testApplicativeHomomorphismLaw() {
+        
+        let f: Int -> Bool = { $0 == 10 }
+        
+        let main: IO<Main> =
+            io(f) <*> io(10)    =>> { x in
+            io(f(10))           =>> { y in
+            
+                io <-- XCTAssertEqual(x, y)
+                
+            } }                 =>> exit
+        
+        <=main
+    }
+    
+    func testApplicativeInterchangeLaw() {
+        
+        let ioF: IO<Int -> Bool> = io { $0 == 10 }
+        
+        
+        let main: IO<Main> =
+            ioF <*> io(10)                                      =>> { x in
+            io { (f: Int -> Bool) -> Bool in f(10) } <*> ioF    =>> { y in
+            
+                io <-- XCTAssertEqual(x, y)
+                
+            } }     =>> exit
+        
+        <=main
+    }
 }
