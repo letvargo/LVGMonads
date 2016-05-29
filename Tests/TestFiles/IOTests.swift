@@ -159,4 +159,22 @@ class IOTests: XCTestCase {
         
         <=main
     }
+    
+    func testMonadAssociativityLaw() {
+        
+        let ioTen = io(10)
+        
+        let ioF: Int -> IO<Bool> = { x in io <-- x == 10 }
+        let ioG: Bool -> IO<String> = { b in io <-- b ? "true" : "false" }
+        
+        let main: IO<Main> =
+            (ioTen =>> ioF) =>> ioG             =>> { x in
+            ioTen =>> ({ m in ioF(m) =>> ioG }) =>> { y in
+            
+                io <-- XCTAssertEqual(x, y)
+                
+            } } =>> exit
+        
+        <=main
+    }
 }
