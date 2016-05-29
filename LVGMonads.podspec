@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.summary      = "Haskell-like Monads implemented in Swift."
   s.homepage     = 'https://github.com/letvargo/LVGMonads'
   s.description  = <<-DESC
-    Haskell-like Monads implemented in Swift.
+    Haskell-like Monads implemented in Swift, starting with the IO Monad.
                    DESC
   s.license      = 'MIT'
   s.author             = { "letvargo" => "letvargo@gmail.com" }
