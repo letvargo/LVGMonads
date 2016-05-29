@@ -24,7 +24,7 @@ infix operator .>> { associativity left precedence 200 }
 /** 
  Left-to-right point-free function composition.
 
- parameters:
+ - parameters:
    - f: A function of type `T -> U`.
    - g: A function of type `U -> V`.
  returns: A new function of type `T -> U`.
@@ -39,9 +39,9 @@ infix operator .<< { associativity right precedence 200 }
 /**
  Right-to-left point-free function composition.
  
- parameters:
- - g: A function of type `U -> V`.
- - f: A function of type `T -> U`.
+ - parameters:
+   - g: A function of type `U -> V`.
+   - f: A function of type `T -> U`.
  returns: A new function of type `T -> U`.
  */
 public func .<< <T, U, V> (g: U -> V, f: T -> U) -> T -> V {
@@ -54,7 +54,7 @@ infix operator --> { associativity left precedence 50 }
 /**
  Left-to-right function application.
  
- parameters:
+ - parameters:
    - x: The function parameter.
    - f: The function to apply.
  returns: `f(x)`.
@@ -69,7 +69,7 @@ infix operator <-- { associativity right precedence 50 }
 /**
  Right-to-left function application.
  
- parameters:
+ - parameters:
    - f: The function to apply.
    - x: The function parameter.
  returns: `f(x)`.
