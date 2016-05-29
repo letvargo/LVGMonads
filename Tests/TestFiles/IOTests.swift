@@ -129,4 +129,34 @@ class IOTests: XCTestCase {
         
         <=main
     }
+    
+    func testMonadLeftIdentityLaw() {
+        
+        let ioF: Int -> IO<Bool> = { x in io <-- x == 10 }
+        
+        let main: IO<Main> =
+            io(10) =>> ioF  =>> { x in
+            ioF(10)         =>> { y in
+                
+                io <-- XCTAssertEqual(x, y)
+                
+            } }             =>> exit
+        
+        <=main
+    }
+    
+    func testMonadRightIdentityLaw() {
+    
+        let ioTen = io(10)
+        
+        let main: IO<Main> =
+            ioTen =>> io    =>> { x in
+            ioTen           =>> { y in
+                
+                io <-- XCTAssertEqual(x, y)
+                
+            } }             =>> exit
+        
+        <=main
+    }
 }
