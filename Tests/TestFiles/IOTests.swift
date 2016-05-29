@@ -62,4 +62,19 @@ class IOTests: XCTestCase {
         
         <=main
     }
+    
+    func testApplicativeIdentityLaw() {
+        let ioTen = io(10)
+        
+        let main: IO<Main> =
+        
+            io(id) <*> (ioTen)  =>> { x in
+            ioTen               =>> { y in
+            
+                io <-- XCTAssertEqual(x, y)
+                
+            } }                 =>> exit
+        
+        <=main
+    }
 }
