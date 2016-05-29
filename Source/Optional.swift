@@ -6,6 +6,19 @@
 //
 //
 
+/**
+ Lift any value into an `Optional`.
+ 
+ This is the equivalent of `pure` in the Applicative typeclass and
+ `return` in the Monad typeclass, and of `unit` generally.
+ 
+ - parameter value: The value to be lifted.
+ - returns: The value, wrapped in an `Optional`.
+ */
+public func opt<A>(value: A) -> A? {
+    return .Some(value)
+}
+
 // MARK: The Maybe Functor functions
 
 /**
