@@ -15,30 +15,34 @@ class IOTests: XCTestCase {
     let ioPrint: Any -> IO<()> = { a in IO { print(a) } }
     let intToString: Int -> String = { $0.description }
     
-    func testAction() {
-        let one = io(1)
-        XCTAssertEqual(one.action(), 1, "action() did not extract correct value.")
-    }
+    func testBind() {
     
-    func testActionOperator() {
         let one = io(1)
-        XCTAssertEqual(<=one, 1, "action() did not extract correct value.")
-    }
-    
-    func testFmapOperator() {
         
-        let op: IO<String> =
-                intToString
-            <^> io(10)
+        let main: IO<Main> =
+            one =>> { x in
+            
+                io <-- XCTAssertEqual(x, 1)
+            
+            }   =>> exit
         
-        XCTAssertEqual(op.action(), "10", "Did not convert correctly.")
+        <=main
     }
     
     func testFunctorIdentityLaw() {
     
         let ioTen = io(10)
         
-        XCTAssertEqual(<=fmap(id)(ioTen), <=id(ioTen))
+        let main: IO<Main> =
+        
+            fmap(id)(ioTen) =>> { x in
+            id(ioTen)       =>> { y in
+            
+                io <-- XCTAssertEqual(x, y)
+                
+            } }             =>> exit
+        
+        <=main
     }
     
     func testFunctorCompositionLaw() {
@@ -47,9 +51,15 @@ class IOTests: XCTestCase {
         let f: Int -> Bool = { $0 == 10 }
         let g: Bool -> String = { $0 ? "true" : "false" }
         
-        XCTAssertEqual(
-            <=(   fmap(g  .<< f       )(ioTen)),
-            <=(   fmap(g) .<< fmap(f) )(ioTen)
-        )
+        let main: IO<Main> =
+        
+            fmap(g .<< f)(ioTen)            =>> { x in
+            (fmap(g) .<< fmap(f))(ioTen)    =>> { y in
+            
+                io <-- XCTAssertEqual(x, y)
+                
+            } }                             =>> exit
+        
+        <=main
     }
 }

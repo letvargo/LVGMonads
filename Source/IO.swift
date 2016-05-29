@@ -13,7 +13,7 @@
  */
 public struct IO<A> {
     
-    let action: () -> A
+    private let action: () -> A
     
     /// Initialize an IO object with a closure that performs a side-effect.
     public init(_ action: () -> A) {
@@ -41,7 +41,7 @@ public prefix func <= (io: IO<Main>) -> Main {
  - parameter io: The IO action to execute.
  - returns: An object of type `T`.
  */
-prefix func <= <A> (io: IO<A>) -> A {
+private prefix func <= <A> (io: IO<A>) -> A {
     return io.action()
 }
 
