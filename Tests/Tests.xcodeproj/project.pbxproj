@@ -10,6 +10,8 @@
 		16FC6F065BCD5A8F2AE7BE13 /* Pods_Tests_OSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFC16DDC6D674AFA829FA8C4 /* Pods_Tests_OSX.framework */; };
 		57C449BB1CFA762900571939 /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C449BA1CFA762900571939 /* General.swift */; };
 		57C449BC1CFA762900571939 /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C449BA1CFA762900571939 /* General.swift */; };
+		57E45C2F1CFB89BF00B0C868 /* OptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E45C2E1CFB89BF00B0C868 /* OptionalTests.swift */; };
+		57E45C301CFB89BF00B0C868 /* OptionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E45C2E1CFB89BF00B0C868 /* OptionalTests.swift */; };
 		57ECC02A1CF55813002AA20C /* IOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57ECC0291CF55813002AA20C /* IOTests.swift */; };
 		57ECC02B1CF55813002AA20C /* IOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57ECC0291CF55813002AA20C /* IOTests.swift */; };
 		6976BF747BF33F4DD253369B /* Pods_Tests_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 659BF50129D17E374BD62054 /* Pods_Tests_iOS.framework */; };
@@ -19,6 +21,7 @@
 		1915923E0F1E961CA09B39D3 /* Pods-Tests-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests-iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests-iOS/Pods-Tests-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		40632CC892BA0A1B705F1354 /* Pods-Tests-OSX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests-OSX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests-OSX/Pods-Tests-OSX.debug.xcconfig"; sourceTree = "<group>"; };
 		57C449BA1CFA762900571939 /* General.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = General.swift; path = TestFiles/General.swift; sourceTree = "<group>"; };
+		57E45C2E1CFB89BF00B0C868 /* OptionalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OptionalTests.swift; path = TestFiles/OptionalTests.swift; sourceTree = "<group>"; };
 		57ECC0141CF55784002AA20C /* Tests-OSX.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests-OSX.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		57ECC0191CF55784002AA20C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		57ECC0211CF55799002AA20C /* Tests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				57ECC0291CF55813002AA20C /* IOTests.swift */,
+				57E45C2E1CFB89BF00B0C868 /* OptionalTests.swift */,
 				57C449BA1CFA762900571939 /* General.swift */,
 			);
 			name = Tests;
@@ -311,6 +315,7 @@
 			files = (
 				57C449BB1CFA762900571939 /* General.swift in Sources */,
 				57ECC02A1CF55813002AA20C /* IOTests.swift in Sources */,
+				57E45C2F1CFB89BF00B0C868 /* OptionalTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +325,7 @@
 			files = (
 				57C449BC1CFA762900571939 /* General.swift in Sources */,
 				57ECC02B1CF55813002AA20C /* IOTests.swift in Sources */,
+				57E45C301CFB89BF00B0C868 /* OptionalTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
